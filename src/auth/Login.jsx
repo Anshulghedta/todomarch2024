@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import AuthContext from './AuthContext';
 
 function Login(props) {
     const [formData, setFormData] = useState(null);
+    const { message, login } = useContext(AuthContext);
 
     const handleChange = (e) => {
         let { name, value } = e.target;
@@ -13,13 +16,9 @@ function Login(props) {
         })
     }
 
-    const submitForm = async (e) => {
+    const submitForm = (e) => {
         e.preventDefault();
-        const response = await fetch(`http://localhost:5000/users?email=${formData.email}&password=${formData.password}`, { method: "GET" });
-        const user = await response.json();
-
-        alert("logged in successfully");
-
+        login(formData);
     }
 
 
@@ -33,6 +32,8 @@ function Login(props) {
                 <label className='form-label'>Password</label>
                 <input type="password" name='password' className='form-control' onChange={handleChange} />
             </div>
+            <p>{message}</p>
+
             <button onClick={submitForm} className='btn btn-primary'>Login</button>
         </form>
     );
